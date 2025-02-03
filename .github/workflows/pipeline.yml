@@ -1,0 +1,56 @@
+name: Deployment pipeline BlogList
+on:
+  push:
+    branches:
+      - main
+  pull_request:    
+    branches: [main]    
+    types: [opened, synchronize]
+
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies 
+        run: npm install 
+      - name: install ci
+        run: npm ci
+      - name: Check style
+        run: npm run lint
+      - name: build
+        run: npm run build
+      - name: test
+        run: npm run test --test-only
+
+
+  
+  Deploy_fly:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+    concurrency: deploy-group
+    if: ${{ (github.event_name == 'push')  && (!contains(github.event.head_commit.message, '#skip')) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: Install dependencies 
+        run: npm install 
+      - name: build and deploy
+        run: npm run build
+      - run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          
+  tag_release:
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+    if: ${{ (github.event_name == 'push')  && (!contains(github.event.head_commit.message, '#skip')) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
