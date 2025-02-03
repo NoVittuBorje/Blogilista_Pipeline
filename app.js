@@ -11,7 +11,7 @@ const loginRouter = require('./controllers/login')
 
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
-const PORT = process.env.PORT || 5000 // eslint-disable-line
+const PORT = process.env.PORT || 5000
 mongoose.set('strictQuery', false)
 
 logger.info('connecting to', config.MONGODB_URI)
@@ -30,7 +30,7 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 app.listen(PORT, () => {
-  console.log(`server started on port ${PORT} `) // eslint-disable-line
+  console.log(`server started on port ${PORT} `)
 })
 
 
