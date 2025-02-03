@@ -1,2 +1,4 @@
 # Blogilista_Pipeline
-[url ](https://blogilista-t11.fly.dev/)
+[Blog list url](https://blogilista-t11.fly.dev/)
+username : root
+password : salasana
