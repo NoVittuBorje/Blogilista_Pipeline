@@ -5,7 +5,7 @@ const tokenExtractor = (request, response, next) => {
     token = token.replace('Bearer ', '')
     request.token = token
     next()
-  }catch(error){response.status(401).json({ error: 'Invalid token' })}
+  }catch(error){console.log(error);response.status(401).json({ error: 'Invalid token' })}
 
 }
 
