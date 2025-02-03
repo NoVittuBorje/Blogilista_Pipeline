@@ -1,4 +1,8 @@
 # Blogilista_Pipeline
-[Blog list url](https://blogilista-t11.fly.dev/)
+https://blogilista-t11.fly.dev/
+
 username : root
+
 password : salasana
+
+Pokedex Repo at https://github.com/NoVittuBorje/full-stack-open-pokedex
