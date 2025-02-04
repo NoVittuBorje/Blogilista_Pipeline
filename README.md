@@ -5,4 +5,4 @@ username : root
 
 password : salasana
 
-Pokedex Repo at https://github.com/NoVittuBorje/full-stack-open-pokedex 
+Pokedex Repo at https://github.com/NoVittuBorje/full-stack-open-pokedex
