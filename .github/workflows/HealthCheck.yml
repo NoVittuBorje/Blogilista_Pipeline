@@ -1,0 +1,36 @@
+name: Health check
+on:
+  schedule:
+     - cron: 50 * 1 * *
+     
+jobs:
+  test_schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v4
+        with:
+          url: https://blogilista-t11.fly.dev/
+          max-attempts: 3 # Optional, defaults to 1
+          retry-delay: 5s # Optional, only applicable to max-attempts > 1
+      - name: Send discord notification on success
+        uses: sarisia/actions-status-discord@5ddd3b114a98457dd80a39b2f00b6a998cd69008
+        if: ${{ success() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          content: 'everything is ok'
+          title: success
+          description: |
+             to https://blogilista-t11.fly.dev/ by `${{ github.actor }}`
+          username: Health check
+      - name: Send discord notification on failure
+        uses: sarisia/actions-status-discord@5ddd3b114a98457dd80a39b2f00b6a998cd69008
+        if: ${{ failure() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          content: 'Health check failed has failed'
+          title: failure
+          description: |
+             to https://blogilista-t11.fly.dev/ `${{ github.actor }}`
+          username: Health check
