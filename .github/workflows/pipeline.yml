@@ -48,6 +48,26 @@ jobs:
       - run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Send discord notification on succesful deploy
+        uses: sarisia/actions-status-discord@5ddd3b114a98457dd80a39b2f00b6a998cd69008
+        if: ${{ success() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          content: 'A new version of BlogList deployed'
+          title: ${{ job.status }}
+          description: |
+             to https://blogilista-t11.fly.dev/ by `${{ github.actor }}`
+          username: GitHub Actions
+      - name: Send discord notification on failure
+        uses: sarisia/actions-status-discord@5ddd3b114a98457dd80a39b2f00b6a998cd69008
+        if: ${{ failure() }}
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          content: 'Deployment has failed'
+          title: ${{ job.status }}
+          description: 'commit [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }}) by `${{ github.actor }}` broke the build'
+          username: GitHub Actions
           
   tag_release:
     needs: [simple_deployment_pipeline]
