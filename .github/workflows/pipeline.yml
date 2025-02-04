@@ -15,8 +15,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
       - name: Install dependencies 
         run: npm install 
       - name: install ci
@@ -27,6 +25,8 @@ jobs:
         run: npm run build
       - name: test
         run: npm run test
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
           
 
 
