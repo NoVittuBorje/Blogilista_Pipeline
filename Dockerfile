@@ -7,8 +7,7 @@ FROM node:${NODE_VERSION}-slim AS base
 LABEL fly_launch_runtime="Node.js"
 
 # Node.js app lives here
-WORKDIR /build
-
+WORKDIR /app
 
 # Set production environment
 ENV NODE_ENV="production"
@@ -23,13 +22,14 @@ RUN apt-get update -qq && \
 
 # Install node modules
 COPY package-lock.json package.json ./
-RUN npm ci
+
+RUN npm ci --include=dev
 
 # Copy application code
 COPY . .
 
 # Build application
-RUN npm run build
+CMD [ "npm", "run", "build" ]
 
 # Remove development dependencies
 RUN npm prune --omit=dev
@@ -39,8 +39,9 @@ RUN npm prune --omit=dev
 FROM base
 
 # Copy built application
-COPY --from=build /build /build
+COPY --from=build /app /app
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3003
+
 CMD [ "npm", "run", "start-prod" ]

@@ -1,8 +1,8 @@
-POST http://localhost:3003/api/users
+POST https://blogilista-t11-little-glitter-5520.fly.dev/api/users
 content-type: application/json
 
 {
-    "username":"root2",
+    "username":"root",
     "name":"Pentti",
     "password":"salasana"
 }
